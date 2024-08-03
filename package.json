@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
-  "private": true, 
+  "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
@@ -16,8 +16,8 @@
     "test:run": "npx poku",
     "database:schema:sync": "npx prisma generate",
     "database:migration:generate": "npx prisma format && npx prisma migrate dev && npm run database:schema:sync",
-    "database:migration:run:prod": "npx prisma migrate deploy",
-    "database:migration:run": "npx prisma migrate dev"
+    "database:migration:run:prod": "npx prisma migrate deploy && npm run database:schema:sync",
+    "database:migration:run": "npx prisma migrate dev && npm run database:schema:sync"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
