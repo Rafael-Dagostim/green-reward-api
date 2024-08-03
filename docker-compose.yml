@@ -23,4 +23,4 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: postgres
-      POSTGRES_DB: dynamis
+      POSTGRES_DB: green-rewards

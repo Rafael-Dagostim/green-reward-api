@@ -13,28 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// Usuário
-model User {
-  id           Int          @id @default(autoincrement()) /// Identificador do registro.
-  documentType DocumentType @map("document_type") /// Tipo do documento informado no campo document.
-  document     String       @db.VarChar(20) /// Documento de identificação do usuário (CPF ou CNPJ).
-  fullName     String       @map("full_name") @db.VarChar(200) /// Nome completo.
-  nickName     String       @map("nick_name") @db.VarChar(60) /// Apelido, nome curto, nome de apresentação.
-  email        String?      @db.VarChar(100) /// Email do usuário.
-  password     String /// Senha de acesso.
-  birthDate    DateTime     @map("birth_date") @db.Date /// Data de aniversário.
-  phone        String       @db.VarChar(20) /// Telefone principal.
-  addressId    Int          @map("address_id") /// Id do registro de endereço.
-  createdAt    DateTime     @default(now()) @map("created_at") /// Data de criação.
-  updatedAt    DateTime     @updatedAt @map("updated_at") /// Data da última atualização.
-  deletedAt    DateTime?    @map("deleted_at") /// Data da exclusão (soft delete).
-
-  address Address @relation(fields: [addressId], references: [id])
-
-  @@map("users")
-}
-
-/// Endereço
+/// Endereços
 model Address {
   id           Int       @id @default(autoincrement()) /// Identificador do registro.
   postcode     String    @map("post_code") @db.VarChar(10) /// Código postal.
@@ -43,7 +22,7 @@ model Address {
   city         String    @db.VarChar(100) /// Cidade.
   street       String /// Rua / Avenida, etc.
   number       String?   @map("number") @db.VarChar(10) /// Número da residência.
-  neighborhood String /// Bairro
+  neighborhood String? /// Bairro
   complement   String? /// Complemento, Logradouro.
   createdAt    DateTime  @default(now()) @map("created_at") /// Data de criação.
   updatedAt    DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
@@ -54,8 +33,167 @@ model Address {
   @@map("addresses")
 }
 
-/// Tipo do documento da entidade.
-enum DocumentType {
-  F /// Pessoa Física
-  J /// Pessoa Jurídica
+/// Arquivos
+model StorageFile {
+  id        Int       @id @default(autoincrement()) /// Identificador do registro.
+  name      String /// Nome do Arquivo
+  path      String /// Diretório do arquivo
+  createdAt DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  user     User?
+  missions MissionDetail[]
+
+  @@map("storage_files")
+}
+
+/// Usuários
+model User {
+  id               Int       @id @default(autoincrement()) /// Identificador do registro.
+  addressId        Int       @map("address_id") /// Id do registro de endereço.
+  avatarId         Int?      @unique @map("avatar_id") /// Id do registro de endereço.
+  totalPoints      Int       @map("total_points") /// Total de pontos do usuário
+  userName         String    @map("username") /// Nome do usuário
+  email            String /// Email do usuário
+  document         String /// Documento do usuário
+  phone            String /// Telefone de contato
+  alternativePhone String    @map("alternative_phone") /// Telefone alternativo para o contato
+  socialMedia      String    @map("social_media") /// Rede Social
+  password         String /// Senha
+  type             UserType /// Tipo do usuário
+  createdAt        DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt        DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt        DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  address Address      @relation(fields: [addressId], references: [id])
+  avatar  StorageFile? @relation(fields: [avatarId], references: [id])
+
+  corporate Corporate?
+
+  missions MissionUser[]
+
+  redemptions PrizeRedemption[]
+
+  @@map("users")
+}
+
+///Empresas
+model Corporate {
+  id        Int       @id @default(autoincrement()) /// Identificador do registro.
+  userId    Int       @unique @map("user_id") /// Id do registro de endereço.
+  name      String /// Razão social da empresa
+  userName  String    @map("user_name") /// Nome do responsável da empresa
+  userCpf   String    @map("user_cpf") /// CPF do responsável da empresa
+  createdAt DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  user User @relation(fields: [userId], references: [id])
+
+  missions Mission[]
+  awards   Award[]
+
+  @@map("comporations")
+}
+
+/// Missões
+model Mission {
+  id            Int       @id @default(autoincrement()) /// Identificador do registro.
+  institutionId Int       @map("intitution_id") /// Id do registro de instituição
+  points        Int /// Total de pontos da missão
+  totalCount    Int       @map("total_count") /// Quantidade que aquela missão pode ser resgatada
+  name          String /// Nome da missão
+  description   String /// Descrição da missão
+  createdAt     DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt     DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt     DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  intitution Corporate @relation(fields: [institutionId], references: [id])
+
+  missionUsers MissionUser[]
+
+  @@map("missions")
+}
+
+/// Missões resgatadas por usuários
+model MissionUser {
+  id        Int               @id @default(autoincrement()) /// Identificador do registro.
+  missionId Int               @map("mission_id") /// Id do registro da missão
+  userId    Int               @map("user_id") /// Id do registro do usuário
+  status    MissionUserStatus /// Status da missão do usuário
+  createdAt DateTime          @default(now()) @map("created_at") /// Data de criação.
+  updatedAt DateTime          @updatedAt @map("updated_at") /// Data da última atualização.
+
+  mission Mission @relation(fields: [missionId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  missionDetail MissionDetail[]
+
+  @@map("mission_user")
+}
+
+/// Detalhes das missões feitas pelos usuários
+model MissionDetail {
+  id            Int       @id @default(autoincrement()) /// Identificador do registro.
+  fileId        Int       @map("file_id") /// Id do registro de arquivo
+  missionUserId Int       @map("mission_user_id") /// Id do registro da missão sendo realizada pelo usuário
+  description   String /// Descrição das operações realizadas na missão
+  createdAt     DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt     DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt     DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  file        StorageFile @relation(fields: [fileId], references: [id])
+  missionUser MissionUser @relation(fields: [missionUserId], references: [id])
+
+  @@map("mission_details")
+}
+
+/// Conquistas cadastradas pelos patrocinadores
+model Award {
+  id          Int       @id @default(autoincrement()) /// Identificador do registro.
+  sponsorId   Int       @map("sponsor_id") /// Id do registro do patrocinador
+  link        String /// Link de acesso do premio
+  totalCount  Int       @map("total_count") /// Quantidade que a conquista pode ser resgatada
+  priceValue  Float     @map("price_value") /// Valor unitário do produto
+  pricePoints Int       @map("price_points") /// Valor unitário em pontos do produto
+  createdAt   DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt   DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt   DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  sponsor Corporate @relation(fields: [sponsorId], references: [id])
+
+  redemptions PrizeRedemption[]
+
+  @@map("awards")
+}
+
+/// Resgates dos premios pelos usuários
+model PrizeRedemption {
+  id        Int       @id @default(autoincrement()) /// Identificador do registro.
+  playerId  Int       @map("player_id")
+  awardId   Int       @map("award_id")
+  createdAt DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  player User  @relation(fields: [playerId], references: [id])
+  award  Award @relation(fields: [awardId], references: [id])
+
+  @@map("prize_redemptions")
+}
+
+/// Tipo de usuário
+enum UserType {
+  PLAYER /// Usuários comuns
+  INSTITUTION /// Instituições
+  SPONSOR /// Patrocinadores
+  ADMIN /// Administradores
+}
+
+/// Status das missões resgatadas pelos usuários
+enum MissionUserStatus {
+  CONCLUDED /// Concluida
+  PENDING /// Pendente
+  QUITED /// Desistida
 }
