@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Usuário
+model User {
+  id           Int          @id @default(autoincrement()) /// Identificador do registro.
+  documentType DocumentType @map("document_type") /// Tipo do documento informado no campo document.
+  document     String       @db.VarChar(20) /// Documento de identificação do usuário (CPF ou CNPJ).
+  fullName     String       @map("full_name") @db.VarChar(200) /// Nome completo.
+  nickName     String       @map("nick_name") @db.VarChar(60) /// Apelido, nome curto, nome de apresentação.
+  email        String?      @db.VarChar(100) /// Email do usuário.
+  password     String /// Senha de acesso.
+  birthDate    DateTime     @map("birth_date") @db.Date /// Data de aniversário.
+  phone        String       @db.VarChar(20) /// Telefone principal.
+  addressId    Int          @map("address_id") /// Id do registro de endereço.
+  createdAt    DateTime     @default(now()) @map("created_at") /// Data de criação.
+  updatedAt    DateTime     @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt    DateTime?    @map("deleted_at") /// Data da exclusão (soft delete).
+
+  address Address @relation(fields: [addressId], references: [id])
+
+  @@map("users")
+}
+
+/// Endereço
+model Address {
+  id           Int       @id @default(autoincrement()) /// Identificador do registro.
+  postcode     String    @map("post_code") @db.VarChar(10) /// Código postal.
+  country      String    @db.VarChar(60) /// País.
+  state        String?   @db.VarChar(100) /// Unidade Federativa, Província, etc.
+  city         String    @db.VarChar(100) /// Cidade.
+  street       String /// Rua / Avenida, etc.
+  number       String?   @map("number") @db.VarChar(10) /// Número da residência.
+  neighborhood String /// Bairro
+  complement   String? /// Complemento, Logradouro.
+  createdAt    DateTime  @default(now()) @map("created_at") /// Data de criação.
+  updatedAt    DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt    DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+
+  user User[]
+
+  @@map("addresses")
+}
+
+/// Tipo do documento da entidade.
+enum DocumentType {
+  F /// Pessoa Física
+  J /// Pessoa Jurídica
+}
