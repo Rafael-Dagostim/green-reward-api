@@ -1,7 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { $Enums } from '@prisma/client';
-import { TYPE_AUTH } from '@shared/decorators/type.decorator';
+import { TYPE_AUTH } from '@shared/decorators/types-allowed.decorator';
 import { UserOrCorporation } from '@shared/types';
 
 @Injectable()
@@ -18,14 +18,12 @@ export class TypeGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const entity = request.user as UserOrCorporation;
+    if (entity.type === 'ADMIN') return true;
 
-    return types.includes(entity.type);
-  }
-
-  handleRequest(err, user): any {
-    if (err || !user) {
-      throw err || new UnauthorizedException();
+    if (!types.includes(entity.type)) {
+      throw new ForbiddenException(null, 'Esse tipo de usuário não possui acesso a essa rota');
     }
-    return user;
+
+    return true;
   }
 }

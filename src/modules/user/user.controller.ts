@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import { ApiTags } from '@nestjs/swagger';
@@ -20,10 +21,13 @@ import { UserDeleteService } from './services/user-delete.service';
 import { UserFindManyService } from './services/user-find-many.service';
 import { UserFindOneService } from './services/user-find-one.service';
 import { UserUpdateService } from './services/user-update.service';
-import { Public } from '@shared/decorators';
+import { Public, TypesAllowed } from '@shared/decorators';
+import { TypeGuard } from '@modules/auth/guards/type.guard';
 
 @ApiTags('user')
 @Controller('user')
+@UseGuards(TypeGuard)
+@TypesAllowed('ADMIN', 'PLAYER')
 export class UserController {
   constructor(
     private readonly userFindManyService: UserFindManyService,
@@ -50,6 +54,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @Public()
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UserUpdateDto): Promise<UserEntity> {
     return this.userUpdateService.execute(id, dto);
   }

@@ -8,12 +8,16 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import { ApiTags } from '@nestjs/swagger';
+import { Public, TypesAllowed, User } from '@shared/decorators';
+import { AwardEntity } from '@shared/entities/award.entity';
 import { CorporationCreateDto } from './domain/dto/corporation-create.dto';
 import { CorporationFindManyDto } from './domain/dto/corporation-find-many.dto';
 import { CorporationUpdateDto } from './domain/dto/corporation-update.dto';
+import { SponsorCreateAwardDTO } from './domain/dto/sponsor-create-award.dto';
 import { CorporationEntity } from './domain/entities/corporation.entity';
 import { CorporationCreateService } from './services/corporation-create.service';
 import { CorporationDeleteService } from './services/corporation-delete.service';
@@ -21,11 +25,12 @@ import { CorporationFindManyService } from './services/corporation-find-many.ser
 import { CorporationFindOneService } from './services/corporation-find-one.service';
 import { CorporationUpdateService } from './services/corporation-update.service';
 import SponsorCreateAwardService from './services/sponsor-create-award.service';
-import { SponsorCreateAwardDTO } from './domain/dto/sponsor-create-award.dto';
-import { AwardEntity } from '@shared/entities/award.entity';
+import { TypeGuard } from '@modules/auth/guards/type.guard';
 
 @ApiTags('corporation')
 @Controller('corporation')
+@UseGuards(TypeGuard)
+@TypesAllowed('INSTITUTION', 'SPONSOR')
 export class CorporationController {
   constructor(
     private readonly corporationFindManyService: CorporationFindManyService,
@@ -62,6 +67,7 @@ export class CorporationController {
    * @returns Dados da corporação cadastrada na base de dados
    */
   @Post()
+  @Public()
   create(@Body() dto: CorporationCreateDto): Promise<CorporationEntity> {
     return this.corporationCreateService.execute(dto);
   }
@@ -82,12 +88,13 @@ export class CorporationController {
    * @param dto Novos dados da corporação
    * @returns Dados da corporação atualizados na base de dados
    */
-  @Patch(':id')
+  @Patch('')
+  @Public()
   update(
-    @Param('id', ParseIntPipe) id: number,
     @Body() dto: CorporationUpdateDto,
+    @User() user: CorporationEntity,
   ): Promise<CorporationEntity> {
-    return this.corporationUpdateService.execute(id, dto);
+    return this.corporationUpdateService.execute(user, dto);
   }
 
   /**
