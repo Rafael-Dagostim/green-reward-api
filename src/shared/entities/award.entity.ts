@@ -5,6 +5,8 @@ export class AwardEntity implements Award {
   id: number;
 
   link: string;
+  name: string;
+  description: string;
   totalCount: number;
   priceValue: number;
   pricePoints: number;

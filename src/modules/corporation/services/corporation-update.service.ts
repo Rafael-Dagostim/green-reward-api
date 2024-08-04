@@ -7,7 +7,10 @@ import { Injectable } from '@nestjs/common';
 export class CorporationUpdateService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(id: number, dto: CorporationUpdateDto): Promise<CorporationEntity> {
+  async execute(
+    id: number,
+    dto: CorporationUpdateDto,
+  ): Promise<CorporationEntity> {
     const { address, ...corporationData } = dto;
     const corporation = await this.prisma.corporation.update({
       where: { id },

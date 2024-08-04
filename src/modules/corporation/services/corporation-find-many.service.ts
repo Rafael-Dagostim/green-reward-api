@@ -16,14 +16,18 @@ export class CorporationFindManyService {
       where,
       orderBy,
 
-      skip: (dto.page - 1) * dto.pageSize,
-      take: dto.pageSize,
+      skip: ((dto.page ?? 1) - 1) * (dto.pageSize ?? 50),
+      take: dto.pageSize ?? 50,
     });
 
-    return corporations.map((corporation) => new CorporationEntity(corporation));
+    return corporations.map(
+      (corporation) => new CorporationEntity(corporation),
+    );
   }
 
-  private createWhereFilter(dto: CorporationFindManyDto): Prisma.CorporationWhereInput {
+  private createWhereFilter(
+    dto: CorporationFindManyDto,
+  ): Prisma.CorporationWhereInput {
     const where: Prisma.CorporationWhereInput = {
       deletedAt: null,
     };

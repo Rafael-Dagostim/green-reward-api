@@ -157,6 +157,8 @@ model MissionDetail {
 /// Conquistas cadastradas pelos patrocinadores
 model Award {
   id          Int       @id @default(autoincrement()) /// Identificador do registro.
+  name        String /// Nome do Premio
+  description String /// Descrição do Premio
   sponsorId   Int       @map("sponsor_id") /// Id do registro do patrocinador
   link        String /// Link de acesso do premio
   totalCount  Int       @map("total_count") /// Quantidade que a conquista pode ser resgatada

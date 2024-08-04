@@ -32,21 +32,42 @@ export class MissionController {
     private readonly missionDeleteService: MissionDeleteService,
   ) {}
 
+  /**
+   * Buscar dados de todas as missões cadastradas na base de dados
+   * @param dto Filtros e paginação
+   * @returns Dados das missões paginados
+   */
   @Get()
   findAll(@Query() dto: MissionFindManyDto): Promise<MissionEntity[]> {
     return this.missionFindManyService.execute(dto);
   }
 
+  /**
+   * Buscar uma missão com base em seu ID
+   * @param id ID da missão
+   * @returns Dados da missão
+   */
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<MissionEntity> {
     return this.missionFindOneService.execute(id);
   }
 
+  /**
+   * Criar nova missão associada á uma instituição
+   * @param dto Dados da missão para serem cadastrados
+   * @returns Dados da missão na base de dados
+   */
   @Post()
   create(@Body() dto: MissionCreateDto): Promise<MissionEntity> {
     return this.missionCreateService.execute(dto);
   }
 
+  /**
+   * Atualizar
+   * @param id 
+   * @param dto 
+   * @returns 
+   */
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,

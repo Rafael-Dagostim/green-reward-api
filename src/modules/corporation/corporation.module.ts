@@ -7,6 +7,7 @@ import { CorporationDeleteService } from './services/corporation-delete.service'
 import { CorporationFindManyService } from './services/corporation-find-many.service';
 import { CorporationFindOneService } from './services/corporation-find-one.service';
 import { CorporationUpdateService } from './services/corporation-update.service';
+import SponsorCreateAwardService from './services/sponsor-create-award.service';
 
 @Module({
   controllers: [CorporationController],
@@ -16,6 +17,7 @@ import { CorporationUpdateService } from './services/corporation-update.service'
     CorporationCreateService,
     CorporationUpdateService,
     CorporationDeleteService,
+    SponsorCreateAwardService,
   ],
 })
 export class CorporationModule {}

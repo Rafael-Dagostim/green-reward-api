@@ -50,7 +50,10 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UserUpdateDto): Promise<UserEntity> {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UserUpdateDto,
+  ): Promise<UserEntity> {
     return this.userUpdateService.execute(id, dto);
   }
 

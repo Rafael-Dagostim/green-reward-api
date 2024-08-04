@@ -12,15 +12,27 @@ import { Public } from 'src/shared/decorators';
 export class AuthController {
   constructor(private readonly authService: LoginService) {}
 
+  /**
+   * Realizar Login na plataforma utilizando os acessos de Player
+   * @param dto Dados de login
+   * @returns Dados do player que está realizando o login
+   */
   @Post('login')
   @Public()
   async login(@Body() dto: LoginDto): Promise<LoginResponse<UserEntity>> {
     return this.authService.executeUserLogin(dto);
   }
 
+  /**
+   * Realizar Login na plataforma utilizando os acessos de corporação
+   * @param dto Dados de login
+   * @returns Dados da corporação que está realizando o login
+   */
   @Post('login/corporation')
   @Public()
-  async loginCorporation(@Body() dto: LoginDto): Promise<LoginResponse<CorporationEntity>> {
+  async loginCorporation(
+    @Body() dto: LoginDto,
+  ): Promise<LoginResponse<CorporationEntity>> {
     return this.authService.executeCorporationLogin(dto);
   }
 }
