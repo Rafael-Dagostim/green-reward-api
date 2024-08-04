@@ -1,6 +1,7 @@
 import { $Enums, Corporation } from '@prisma/client';
 import { Exclude } from 'class-transformer';
 import { AwardEntity } from '@shared/entities/award.entity';
+import { AddressEntity } from '@shared/entities/address.entity';
 
 export class CorporationEntity implements Corporation {
   id: number;
@@ -25,11 +26,14 @@ export class CorporationEntity implements Corporation {
 
   awards: AwardEntity[];
 
+  address: AddressEntity;
+
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 
   constructor(partial: Partial<CorporationEntity>) {
-    Object.assign(this, partial);
+    const address = partial.address && new AddressEntity(partial.address);
+    Object.assign(this, { ...partial, address });
   }
 }

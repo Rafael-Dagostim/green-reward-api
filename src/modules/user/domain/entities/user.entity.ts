@@ -31,8 +31,8 @@ export class UserEntity implements User {
   deletedAt: Date;
 
   constructor(partial: Partial<UserEntity>) {
-    const address = partial.address && new AddressEntity(partial);
-    const avatar = partial.address && new StoredFileEntity(partial);
+    const address = partial.address && new AddressEntity(partial.address);
+    const avatar = partial.address && new StoredFileEntity(partial.avatar);
 
     Object.assign(this, { ...partial, address, avatar });
   }
