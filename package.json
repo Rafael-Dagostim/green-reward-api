@@ -19,6 +19,9 @@
     "database:migration:run:prod": "npx prisma migrate deploy && npm run database:schema:sync",
     "database:migration:run": "npx prisma migrate dev && npm run database:schema:sync"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
@@ -60,7 +63,7 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
