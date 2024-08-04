@@ -47,7 +47,7 @@ model User {
   id               Int       @id @default(autoincrement()) /// Identificador do registro.
   addressId        Int       @unique() @map("address_id") /// Id do registro de endereço.
   avatarId         Int?      @unique @map("avatar_id") /// Id do registro de endereço.
-  totalPoints      Int       @map("total_points") /// Total de pontos do usuário
+  totalPoints      Int       @default(0) @map("total_points") /// Total de pontos do usuário
   username         String    @map("username") /// Nome do usuário
   email            String    @unique /// Email do usuário
   document         String    @unique /// Documento (CPF) do usuário
