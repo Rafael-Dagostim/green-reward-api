@@ -22,10 +22,10 @@ import { JwtAuthGuard } from './guards/jwt.guard';
   providers: [
     LoginService,
     JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // }, // TODO liberando acesso total as rotas para teste
   ],
 })
 export class AuthModule {}

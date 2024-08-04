@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { UserEntity } from '../domain/entities/user.entity';
-import { UserCreateDto } from '../domain/dto/user-create.dto';
 import { genSalt, hash } from 'bcrypt';
+import PrismaService from 'src/core/database/connection.database.service';
+import { UserCreateDto } from '../domain/dto/user-create.dto';
+import { UserEntity } from '../domain/entities/user.entity';
 
 export class UserCreateService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto: UserCreateDto): Promise<UserEntity> {
     const { address, password, ...userData } = dto;

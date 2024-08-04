@@ -1,9 +1,10 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import { CorporationEntity } from '../domain/entities/corporation.entity';
+import { Prisma } from '@prisma/client';
+import PrismaService from 'src/core/database/connection.database.service';
 import { CorporationFindManyDto } from '../domain/dto/corporation-find-many.dto';
+import { CorporationEntity } from '../domain/entities/corporation.entity';
 
 export class CorporationFindManyService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto: CorporationFindManyDto): Promise<CorporationEntity[]> {
     const where = this.createWhereFilter(dto);

@@ -1,9 +1,10 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import { UserEntity } from '../domain/entities/user.entity';
+import { Prisma } from '@prisma/client';
 import { UserFindManyDto } from '../domain/dto/user-find-many.dto';
+import { UserEntity } from '../domain/entities/user.entity';
+import PrismaService from 'src/core/database/connection.database.service';
 
 export class UserFindManyService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto: UserFindManyDto): Promise<UserEntity[]> {
     const where = this.createWhereFilter(dto);

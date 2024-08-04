@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { CorporationEntity } from '../domain/entities/corporation.entity';
-import { CorporationCreateDto } from '../domain/dto/corporation-create.dto';
 import { genSalt, hash } from 'bcrypt';
+import PrismaService from 'src/core/database/connection.database.service';
+import { CorporationCreateDto } from '../domain/dto/corporation-create.dto';
+import { CorporationEntity } from '../domain/entities/corporation.entity';
 
 export class CorporationCreateService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto: CorporationCreateDto): Promise<CorporationEntity> {
     const { address, password, ...corporationData } = dto;

@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-import { CorporationEntity } from '../domain/entities/corporation.entity';
+import PrismaService from 'src/core/database/connection.database.service';
 import { CorporationUpdateDto } from '../domain/dto/corporation-update.dto';
+import { CorporationEntity } from '../domain/entities/corporation.entity';
 
 export class CorporationUpdateService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(id: number, dto: CorporationUpdateDto): Promise<CorporationEntity> {
     const { address, ...corporationData } = dto;
