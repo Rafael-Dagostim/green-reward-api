@@ -1,6 +1,6 @@
+import { AwardEntity } from '@modules/award/domain/entities/award.entity';
 import { $Enums, Corporation } from '@prisma/client';
 import { Exclude } from 'class-transformer';
-import { AwardEntity } from '@shared/entities/award.entity';
 import { AddressEntity } from '@shared/entities/address.entity';
 
 export class CorporationEntity implements Corporation {

@@ -1,6 +1,6 @@
 import { PrizeRedemption } from '@prisma/client';
-import { AwardEntity } from './award.entity';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
+import { AwardEntity } from '@modules/award/domain/entities/award.entity';
 
 export class PrizeRedemptionEntity implements PrizeRedemption {
   id: number;
