@@ -1,5 +1,5 @@
 import { Award } from '@prisma/client';
-import { CorporationEntity } from './corporation.entity';
+import { CorporationEntity } from '../../modules/corporation/domain/entities/corporation.entity';
 
 export class AwardEntity implements Award {
   id: number;

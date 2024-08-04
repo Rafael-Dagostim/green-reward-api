@@ -9,16 +9,18 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UserCreateDto } from '../domain/dto/user-create.dto';
-import { UserFindManyDto } from '../domain/dto/user-find-many.dto';
-import { UserUpdateDto } from '../domain/dto/user-update.dto';
-import { UserEntity } from '../domain/entities/user.entity';
-import { UserCreateService } from '../services/user-create.service';
-import { UserDeleteService } from '../services/user-delete.service';
-import { UserFindManyService } from '../services/user-find-many.service';
-import { UserFindOneService } from '../services/user-find-one.service';
-import { UserUpdateService } from '../services/user-update.service';
+
 import { ApiTags } from '@nestjs/swagger';
+import { UserCreateDto } from './domain/dto/user-create.dto';
+import { UserFindManyDto } from './domain/dto/user-find-many.dto';
+import { UserUpdateDto } from './domain/dto/user-update.dto';
+import { UserEntity } from './domain/entities/user.entity';
+import { UserCreateService } from './services/user-create.service';
+import { UserDeleteService } from './services/user-delete.service';
+import { UserFindManyService } from './services/user-find-many.service';
+import { UserFindOneService } from './services/user-find-one.service';
+import { UserUpdateService } from './services/user-update.service';
+import { Public } from 'src/shared/decorators';
 
 @ApiTags('user')
 @Controller('user')
@@ -42,6 +44,7 @@ export class UserController {
   }
 
   @Post()
+  @Public()
   create(@Body() dto: UserCreateDto): Promise<UserEntity> {
     return this.userCreateService.execute(dto);
   }

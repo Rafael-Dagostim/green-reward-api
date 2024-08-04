@@ -80,7 +80,7 @@ model Corporation {
   businessName        String          @map("business_name") /// Nome Fantasia da empresa
   responsibleName     String          @map("responsible_name") /// Nome do responsável da empresa
   responsibleDocument String          @map("responsible_document") /// CPF do responsável da empresa
-  totalPoints         Int             @map("total_points") /// Total de pontos da empresa
+  totalPoints         Int             @default(0) @map("total_points") /// Total de pontos da empresa
   email               String /// Email da empresa
   document            String /// Documento (CNPJ) da empresa
   password            String /// Senha

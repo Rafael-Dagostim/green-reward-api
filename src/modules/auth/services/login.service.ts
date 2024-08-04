@@ -7,7 +7,7 @@ import { UserEntity } from '../../user/domain/entities/user.entity';
 import { LoginResponse } from '../domain/dto/login-response.dto';
 import { LoginDto } from '../domain/dto/login.dto';
 import { JwtContent } from '../domain/types/jwt-content.type';
-import { CorporationEntity } from 'src/shared/entities/corporation.entity';
+import { CorporationEntity } from 'src/modules/corporation/domain/entities/corporation.entity';
 
 @Injectable()
 export class LoginService {
