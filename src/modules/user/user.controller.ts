@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UserCreateDto } from './domain/dto/user-create.dto';
 import { UserFindManyDto } from './domain/dto/user-find-many.dto';
 import { UserUpdateDto } from './domain/dto/user-update.dto';
-import { UserEntity } from './domain/entities/user.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { UserCreateService } from './services/user-create.service';
 import { UserDeleteService } from './services/user-delete.service';
 import { UserFindManyService } from './services/user-find-many.service';

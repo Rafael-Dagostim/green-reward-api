@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import PrismaService from '@core/database/connection.database.service';
-import { UserEntity } from '../../user/domain/entities/user.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { LoginResponse } from '../domain/dto/login-response.dto';
 import { LoginDto } from '../domain/dto/login.dto';
 import { JwtContent } from '../domain/types/jwt-content.type';

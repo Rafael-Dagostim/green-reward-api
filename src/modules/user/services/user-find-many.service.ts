@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { UserFindManyDto } from '../domain/dto/user-find-many.dto';
-import { UserEntity } from '../domain/entities/user.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import PrismaService from '@core/database/connection.database.service';
 import { Injectable } from '@nestjs/common';
 
@@ -33,7 +33,9 @@ export class UserFindManyService {
     return where;
   }
 
-  private setColumnOrdering(params: UserFindManyDto): Prisma.UserOrderByWithRelationInput {
+  private setColumnOrdering(
+    params: UserFindManyDto,
+  ): Prisma.UserOrderByWithRelationInput {
     if (!params.orderBy) return { id: params.ordering };
     return { [params.orderBy]: params.ordering };
   }

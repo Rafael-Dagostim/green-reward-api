@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { LoginService } from './services/login.service';
 import { LoginDto } from './domain/dto/login.dto';
-import { UserEntity } from '../user/domain/entities/user.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { LoginResponse } from './domain/dto/login-response.dto';
 import { CorporationEntity } from '../corporation/domain/entities/corporation.entity';
 import { ApiTags } from '@nestjs/swagger';
