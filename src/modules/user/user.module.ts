@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { UserController } from './controllers/user.controller';
+import { UserController } from './user.controller';
 
 import { UserCreateService } from './services/user-create.service';
 import { UserDeleteService } from './services/user-delete.service';
@@ -18,4 +18,4 @@ import { UserUpdateService } from './services/user-update.service';
     UserDeleteService,
   ],
 })
-export default class UserModule {}
+export class UserModule {}

@@ -4,7 +4,7 @@ import { SwaggerDefinition } from './core/config/swagger/swagger.definition';
 import ClassValidator from './core/config/class-validator/class-validatior.config';
 import HttpConfig from './core/config/http/http.config';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { cors: false });
 
   SwaggerDefinition.start(app, '/doc');
