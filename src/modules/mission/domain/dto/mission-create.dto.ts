@@ -1,8 +1,6 @@
 export class MissionCreateDto {
   points: number;
-  totalCount: number;
+  totalCall: number;
   name: string;
   description: string;
-
-  institutionId: number;
 }

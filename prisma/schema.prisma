@@ -110,7 +110,7 @@ model Mission {
   id            Int       @id @default(autoincrement()) /// Identificador do registro.
   institutionId Int       @map("intitution_id") /// Id do registro de instituição
   points        Int /// Total de pontos resgatados por missão
-  totalCount    Int       @map("total_count") /// Quantidade que aquela missão pode ser resgatada
+  totalCall     Int       @map("total_call") /// Quantidade que aquela missão pode ser resgatada
   name          String /// Nome da missão
   description   String /// Descrição da missão
   createdAt     DateTime  @default(now()) @map("created_at") /// Data de criação.
@@ -133,6 +133,7 @@ model MissionTag {
 
   mission Mission @relation(fields: [missionId], references: [id])
 
+  @@unique([missionId, tag])
   @@map("mission_tags")
 }
 

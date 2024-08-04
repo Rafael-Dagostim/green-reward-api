@@ -9,7 +9,8 @@ export class MissionFindOneService {
   async execute(id: number): Promise<MissionEntity> {
     const mission = await this.prisma.mission.findUnique({
       where: { id, deletedAt: null },
+      include: { tags: true },
     });
-    return new MissionEntity(mission);
+    return new MissionEntity(mission, mission.tags);
   }
 }

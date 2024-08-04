@@ -16,11 +16,13 @@ export class MissionFindManyService {
       where,
       orderBy,
 
+      include: { tags: true },
+
       skip: (dto.page - 1) * dto.pageSize,
       take: dto.pageSize,
     });
 
-    return missions.map((mission) => new MissionEntity(mission));
+    return missions.map((mission) => new MissionEntity(mission, mission.tags));
   }
 
   private createWhereFilter(dto: MissionFindManyDto): Prisma.MissionWhereInput {

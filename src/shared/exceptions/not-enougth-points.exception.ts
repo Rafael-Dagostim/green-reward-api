@@ -1,11 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 
 export class NotEnoughPointsException extends NotFoundException {
-  constructor(entityOrObjectName: string, referenceField?: string, referenceValue?: any) {
-    const message =
-      referenceField && referenceValue
-        ? `${entityOrObjectName} com ${referenceField.toString()} igual à ${referenceValue} não encontrado(a)`
-        : `${entityOrObjectName} não encontrado(a)`;
+  constructor(currentPoints: number, missingPoints: number) {
+    const message = `Você não tem pontos suficientes, voce possui ${currentPoints} faltam ${missingPoints}`;
     super(null, message);
   }
 }

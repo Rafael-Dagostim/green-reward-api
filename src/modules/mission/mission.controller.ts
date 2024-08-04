@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import { ApiTags } from '@nestjs/swagger';
@@ -20,9 +21,13 @@ import { MissionDeleteService } from './services/mission-delete.service';
 import { MissionFindManyService } from './services/mission-find-many.service';
 import { MissionFindOneService } from './services/mission-find-one.service';
 import { MissionUpdateService } from './services/mission-update.service';
+import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
+import { TypeGuard } from '@modules/auth/guards/type.guard';
+import { AllowedTypes, User } from '@shared/decorators';
 
 @ApiTags('mission')
 @Controller('mission')
+@UseGuards(TypeGuard)
 export class MissionController {
   constructor(
     private readonly missionFindManyService: MissionFindManyService,
@@ -58,8 +63,9 @@ export class MissionController {
    * @returns Dados da missão na base de dados
    */
   @Post()
-  create(@Body() dto: MissionCreateDto): Promise<MissionEntity> {
-    return this.missionCreateService.execute(dto);
+  @AllowedTypes('INSTITUTION')
+  create(@Body() dto: MissionCreateDto, @User() user: CorporationEntity): Promise<MissionEntity> {
+    return this.missionCreateService.execute(dto, user.id);
   }
 
   /**

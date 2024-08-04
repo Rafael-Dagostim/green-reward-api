@@ -76,7 +76,7 @@ export class CorporationController {
    * @param dto Novos dados da corporação
    * @returns Dados da corporação atualizados na base de dados
    */
-  @Patch('')
+  @Patch()
   @Public()
   update(
     @Body() dto: CorporationUpdateDto,
