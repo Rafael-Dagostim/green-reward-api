@@ -1,5 +1,4 @@
 import { Mission } from '@prisma/client';
-import { CorporationEntity } from '../../modules/corporation/domain/entities/corporation.entity';
 
 export class MissionEntity implements Mission {
   id: number;
@@ -10,14 +9,14 @@ export class MissionEntity implements Mission {
   description: string;
 
   institutionId: number;
-  institution?: CorporationEntity;
+  institution?: MissionEntity;
 
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 
   constructor(partial: Partial<MissionEntity>) {
-    const sponsor = partial.institution && new CorporationEntity(partial.institution);
+    const sponsor = partial.institution && new MissionEntity(partial.institution);
 
     Object.assign(this, { ...partial, sponsor });
   }

@@ -1,5 +1,5 @@
 import { MissionDetail, MissionUser } from '@prisma/client';
-import { StoredFileEntity } from './stored-files.entity';
+import { StoredFileEntity } from '../../../../shared/entities/stored-files.entity';
 import { MissionUserEntity } from './mission-user.entity';
 
 export class MissionDetailEntity implements MissionDetail {
