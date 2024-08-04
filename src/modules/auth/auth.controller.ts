@@ -7,6 +7,7 @@ import { CorporationEntity } from '../corporation/domain/entities/corporation.en
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@shared/decorators';
 import RefreshTokenService from './services/refresh-token.service';
+import { UserOrCorporation } from '@shared/types';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -42,7 +43,7 @@ export class AuthController {
   @Public()
   async refreshToken(
     @Body() { token }: { token: string },
-  ): Promise<LoginResponseDto<UserEntity | CorporationEntity>> {
+  ): Promise<LoginResponseDto<UserOrCorporation>> {
     const data = await this.refreshTokenService.execute(token);
     return data;
   }

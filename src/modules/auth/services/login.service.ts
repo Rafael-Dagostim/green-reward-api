@@ -8,6 +8,7 @@ import { LoginResponseDto } from '../domain/dto/login-response.dto';
 import { LoginDto } from '../domain/dto/login.dto';
 import { JwtContent } from '../domain/types/jwt-content.type';
 import TokenService from './token.service';
+import { UserOrCorporation } from '@shared/types';
 
 @Injectable()
 export class LoginService {
@@ -67,7 +68,7 @@ export class LoginService {
     return this.createLoginResponse(entity);
   }
 
-  private async validatePassword<T extends UserEntity | CorporationEntity>(
+  private async validatePassword<T extends UserOrCorporation>(
     password: string,
     entity: T,
   ): Promise<boolean> {
@@ -75,7 +76,7 @@ export class LoginService {
     return compare(hashPassword, entity.password);
   }
 
-  private async createLoginResponse<T extends UserEntity | CorporationEntity>(
+  private async createLoginResponse<T extends UserOrCorporation>(
     entity: T,
   ): Promise<LoginResponseDto<T>> {
     const jwtContent: JwtContent = {

@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginResponseDto } from '../domain/dto/login-response.dto';
 import { JwtContent } from '../domain/types/jwt-content.type';
 import TokenService from './token.service';
+import { UserOrCorporation } from '@shared/types';
 
 @Injectable()
 export default class RefreshTokenService {
@@ -17,13 +18,13 @@ export default class RefreshTokenService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(refreshToken: string): Promise<LoginResponseDto<UserEntity | CorporationEntity>> {
+  async execute(refreshToken: string): Promise<LoginResponseDto<UserOrCorporation>> {
     try {
       const payload = await this.jwtService.verifyAsync<JwtContent>(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       });
 
-      const entity: UserEntity | CorporationEntity =
+      const entity: UserOrCorporation =
         payload.type === 'PLAYER' || payload.type === 'ADMIN'
           ? await this.findUser(payload.entityId)
           : await this.findCorporation(payload.entityId);

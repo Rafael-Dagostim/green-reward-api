@@ -117,8 +117,19 @@ model Mission {
   institution Corporation @relation(fields: [institutionId], references: [id])
 
   missionUsers MissionUser[]
+  tags         MissionTag[]
 
   @@map("missions")
+}
+
+model MissionTag {
+  id        Int    @id @default(autoincrement()) /// Identificador do registro.
+  missionId Int /// Id da missão
+  tag       String @db.VarChar(50) /// string da tag associada 
+
+  mission Mission @relation(fields: [missionId], references: [id])
+
+  @@map("mission_tags")
 }
 
 /// Missões resgatadas por usuários

@@ -33,9 +33,7 @@ export class UserFindManyService {
     return where;
   }
 
-  private setColumnOrdering(
-    params: UserFindManyDto,
-  ): Prisma.UserOrderByWithRelationInput {
+  private setColumnOrdering(params: UserFindManyDto): Prisma.UserOrderByWithRelationInput {
     if (!params.orderBy) return { id: params.ordering };
     return { [params.orderBy]: params.ordering };
   }
