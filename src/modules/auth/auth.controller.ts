@@ -30,9 +30,7 @@ export class AuthController {
    */
   @Post('login/corporation')
   @Public()
-  async loginCorporation(
-    @Body() dto: LoginDto,
-  ): Promise<LoginResponse<CorporationEntity>> {
+  async loginCorporation(@Body() dto: LoginDto): Promise<LoginResponse<CorporationEntity>> {
     return this.authService.executeCorporationLogin(dto);
   }
 }

@@ -33,6 +33,7 @@ export class LoginService {
           { document: { contains: dto.login, mode: 'insensitive' } },
         ],
       },
+      include: { address: true },
     });
 
     if (!user) throw this.notFoundException;
@@ -45,9 +46,7 @@ export class LoginService {
     return this.createLoginResponse(entity);
   }
 
-  async executeCorporationLogin(
-    dto: LoginDto,
-  ): Promise<LoginResponse<CorporationEntity>> {
+  async executeCorporationLogin(dto: LoginDto): Promise<LoginResponse<CorporationEntity>> {
     const corporation = await this.prisma.corporation.findFirst({
       where: {
         OR: [
@@ -55,6 +54,7 @@ export class LoginService {
           { document: { contains: dto.login, mode: 'insensitive' } },
         ],
       },
+      include: { address: true },
     });
 
     if (!corporation) throw this.notFoundException;
@@ -71,10 +71,7 @@ export class LoginService {
     password: string,
     entity: T,
   ): Promise<boolean> {
-    const hashPassword = await hash(
-      password,
-      `${entity.salt}${this.passwordPepper}`,
-    );
+    const hashPassword = await hash(password, `${entity.salt}${this.passwordPepper}`);
     return compare(hashPassword, entity.password);
   }
 
