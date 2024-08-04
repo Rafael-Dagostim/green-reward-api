@@ -1,5 +1,5 @@
 import PrismaService from '@core/database/connection.database.service';
-import { SponsorCreateAwardDTO } from '../domain/dto/sponsor-create-award.dto';
+import { AwardCreateDto } from '../domain/dto/award-create.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpException, Injectable } from '@nestjs/common';
 import { CorporationEntity } from '../../corporation/domain/entities/corporation.entity';
@@ -13,9 +13,8 @@ export default class SponsorCreateAwardService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async execute(dto: SponsorCreateAwardDTO): Promise<AwardEntity> {
-    const points = this.calcPoints(dto.priceValueUnit, dto.totalCounts);
-    const sponsor = await this.findSponsor(dto.sponsorId);
+  public async execute(dto: AwardCreateDto, sponsor: CorporationEntity): Promise<AwardEntity> {
+    const points = this.calcPoints(dto.unitPrice, dto.quantity);
     const data = await this.prismaService.award.create({
       data: this.serializeAward(dto, points.unit) as Award,
     });
@@ -44,28 +43,19 @@ export default class SponsorCreateAwardService {
     return new CorporationEntity(sponsor);
   }
 
-  private serializeAward(
-    dto: SponsorCreateAwardDTO,
-    points: number,
-  ): AwardEntity {
+  private serializeAward(dto: AwardCreateDto, points: number): AwardEntity {
     return new AwardEntity({
       link: dto.link,
       name: dto.name,
       description: dto.description,
       pricePoints: points,
-      priceValue: dto.priceValueUnit,
-      sponsorId: dto.sponsorId,
-      totalCount: dto.totalCounts,
+      priceValue: dto.unitPrice,
+      redeemQuantity: dto.quantity,
     });
   }
 
-  private calcPoints(
-    valueUnit: number,
-    count: number,
-  ): { unit: number; total: number } {
-    const valuePointsByBRL = this.configService.getOrThrow<number>(
-      'POINT_VALUE_PER_BRL',
-    );
+  private calcPoints(valueUnit: number, count: number): { unit: number; total: number } {
+    const valuePointsByBRL = this.configService.getOrThrow<number>('POINT_VALUE_PER_BRL');
     const valueInPoints = valueUnit / valuePointsByBRL;
     return {
       unit: Math.round(valueInPoints),

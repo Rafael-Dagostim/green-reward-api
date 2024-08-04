@@ -1,12 +1,16 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
+import { Body, Controller, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import SponsorCreateAwardService from './services/sponsor-create-award.service';
-import { SponsorCreateAwardDTO } from '@modules/award/domain/dto/sponsor-create-award.dto';
+import { AllowedTypes, User } from '@shared/decorators';
+import { AwardCreateDto } from './domain/dto/award-create.dto';
 import { AwardEntity } from './domain/entities/award.entity';
 import RescueAwardService from './services/rescue-award.service';
+import SponsorCreateAwardService from './services/sponsor-create-award.service';
+import { TypeGuard } from '@modules/auth/guards/type.guard';
 
 @Controller('award')
 @ApiTags('award')
+@UseGuards(TypeGuard)
 export default class AwardController {
   public constructor(
     private readonly sponsorCreateAwardService: SponsorCreateAwardService,
@@ -18,8 +22,12 @@ export default class AwardController {
    * @returns Dados do novo premio do patrocinador cadastrado na base de dados
    */
   @Post()
-  async createAward(@Body() dto: SponsorCreateAwardDTO): Promise<AwardEntity> {
-    return await this.sponsorCreateAwardService.execute(dto);
+  @AllowedTypes('SPONSOR')
+  async createAward(
+    @Body() dto: AwardCreateDto,
+    @User() sponsor: CorporationEntity,
+  ): Promise<AwardEntity> {
+    return await this.sponsorCreateAwardService.execute(dto, sponsor);
   }
 
   /**
@@ -29,6 +37,7 @@ export default class AwardController {
    * @returns Link para o resgate
    */
   @Patch('/:id/rescue/:userId')
+  @AllowedTypes('PLAYER')
   async rescueAward(
     @Param('id') awardId: number,
     @Param('userId') userId: number,
