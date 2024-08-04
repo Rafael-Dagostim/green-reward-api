@@ -2,9 +2,9 @@ import PrismaService from '@core/database/connection.database.service';
 import { SponsorCreateAwardDTO } from '../domain/dto/sponsor-create-award.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpException, Injectable } from '@nestjs/common';
-import { CorporationEntity } from '../domain/entities/corporation.entity';
-import { AwardEntity } from '@shared/entities/award.entity';
+import { CorporationEntity } from '../../corporation/domain/entities/corporation.entity';
 import { Award } from '@prisma/client';
+import { AwardEntity } from '@modules/award/domain/entities/award.entity';
 
 @Injectable()
 export default class SponsorCreateAwardService {
@@ -64,7 +64,7 @@ export default class SponsorCreateAwardService {
     count: number,
   ): { unit: number; total: number } {
     const valuePointsByBRL = this.configService.getOrThrow<number>(
-      'POINT_VALUE_PEER_BRL',
+      'POINT_VALUE_PER_BRL',
     );
     const valueInPoints = valueUnit / valuePointsByBRL;
     return {

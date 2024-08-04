@@ -67,6 +67,7 @@ model User {
 
   missions    MissionUser[]
   redemptions PrizeRedemption[]
+  points      PointsLog[]
 
   @@map("users")
 }
@@ -96,8 +97,10 @@ model Corporation {
   address Address     @relation(fields: [addressId], references: [id])
   avatar  StoredFile? @relation(fields: [logoId], references: [id])
 
-  missions Mission[]
-  awards   Award[]
+  missions                  Mission[]
+  awards                    Award[]
+  pointsTransferSponsor     PointsTransfer[] @relation("sponsor_FK")
+  pointsTransferInstitution PointsTransfer[] @relation("institution_FK")
 
   @@map("corporations")
 }
@@ -118,6 +121,7 @@ model Mission {
 
   missionUsers MissionUser[]
   tags         MissionTag[]
+  pointsUser   PointsLog[]
 
   @@map("missions")
 }
@@ -199,6 +203,34 @@ model PrizeRedemption {
   award  Award @relation(fields: [awardId], references: [id])
 
   @@map("prize_redemptions")
+}
+
+/// Logs das movimentações de pontos do usuário pra missão
+model PointsLog {
+  id        Int      @id @default(autoincrement()) /// Identificador do registro.
+  userId    Int      @map("user_id")
+  missionId Int      @map("mission_id")
+  points    Int
+  createdAt DateTime @default(now()) @map("created_at") /// Data de criação.
+
+  user    User    @relation(fields: [userId], references: [id])
+  mission Mission @relation(fields: [missionId], references: [id])
+
+  @@map("points_log")
+}
+
+/// Logs das movimentações de pontos entre patrocinador e instituições
+model PointsTransfer {
+  id            Int      @id @default(autoincrement()) /// Identificador do registro.
+  sponsorId     Int      @map("sponsor_id")
+  institutionId Int      @map("institution_id")
+  points        Int
+  createdAt     DateTime @default(now()) @map("created_at") /// Data de criação.
+
+  sponsor     Corporation @relation(fields: [sponsorId], references: [id], name: "sponsor_FK")
+  institution Corporation @relation(fields: [institutionId], references: [id], name: "institution_FK")
+
+  @@map("points_transfer")
 }
 
 /// Tipo de usuário
