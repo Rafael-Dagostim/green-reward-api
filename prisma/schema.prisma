@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,26 +9,25 @@ datasource db {
 
 /// Endereços
 model Address {
-  id           Int       @id @default(autoincrement()) /// Identificador do registro.
-  postcode     String    @map("post_code") @db.VarChar(10) /// Código postal.
-  country      String    @db.VarChar(60) /// País.
-  state        String?   @db.VarChar(100) /// Unidade Federativa, Província, etc.
-  city         String    @db.VarChar(100) /// Cidade.
-  street       String /// Rua / Avenida, etc.
-  number       String?   @map("number") @db.VarChar(10) /// Número da residência.
+  id           Int      @id @default(autoincrement()) /// Identificador do registro.
+  postcode     String   @map("post_code") @db.VarChar(10) /// Código postal.
+  state        String   @db.VarChar(100) /// Unidade Federativa, Província, etc.
+  city         String   @db.VarChar(100) /// Cidade.
   neighborhood String? /// Bairro
+  street       String? /// Rua 
+  number       String?  @db.VarChar(10) /// Número da residência.
   complement   String? /// Complemento, Logradouro.
-  createdAt    DateTime  @default(now()) @map("created_at") /// Data de criação.
-  updatedAt    DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
-  deletedAt    DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+  createdAt    DateTime @default(now()) @map("created_at") /// Data de criação.
+  updatedAt    DateTime @updatedAt @map("updated_at") /// Data da última atualização.
 
-  user User[]
+  user        User?
+  corporation Corporation?
 
   @@map("addresses")
 }
 
 /// Arquivos
-model StorageFile {
+model StoredFile {
   id        Int       @id @default(autoincrement()) /// Identificador do registro.
   name      String /// Nome do Arquivo
   path      String /// Diretório do arquivo
@@ -42,59 +35,71 @@ model StorageFile {
   updatedAt DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
   deletedAt DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
 
-  user     User?
-  missions MissionDetail[]
+  user        User?
+  mission     MissionDetail?
+  corporation Corporation?
 
-  @@map("storage_files")
+  @@map("stored_files")
 }
 
 /// Usuários
 model User {
   id               Int       @id @default(autoincrement()) /// Identificador do registro.
-  addressId        Int       @map("address_id") /// Id do registro de endereço.
+  addressId        Int       @unique() @map("address_id") /// Id do registro de endereço.
   avatarId         Int?      @unique @map("avatar_id") /// Id do registro de endereço.
   totalPoints      Int       @map("total_points") /// Total de pontos do usuário
-  userName         String    @map("username") /// Nome do usuário
-  email            String /// Email do usuário
-  document         String /// Documento do usuário
-  phone            String /// Telefone de contato
-  alternativePhone String    @map("alternative_phone") /// Telefone alternativo para o contato
-  socialMedia      String    @map("social_media") /// Rede Social
+  username         String    @map("username") /// Nome do usuário
+  email            String    @unique /// Email do usuário
+  document         String    @unique /// Documento (CPF) do usuário
   password         String /// Senha
-  type             UserType /// Tipo do usuário
+  salt             String /// Salt da senha para encriptação
+  phone            String? /// Telefone de contato
+  alternativePhone String?   @map("alternative_phone") /// Telefone alternativo para o contato
+  socialMedia      String?   @map("social_media") /// Rede Social
+  birthDate        DateTime  @map("birth_date") @db.Date() /// Data de nascimento
+  type             UserType  @default(PLAYER) /// Tipo do usuário
   createdAt        DateTime  @default(now()) @map("created_at") /// Data de criação.
   updatedAt        DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
   deletedAt        DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
 
-  address Address      @relation(fields: [addressId], references: [id])
-  avatar  StorageFile? @relation(fields: [avatarId], references: [id])
+  address Address     @relation(fields: [addressId], references: [id])
+  avatar  StoredFile? @relation(fields: [avatarId], references: [id])
 
-  corporate Corporate?
-
-  missions MissionUser[]
-
+  missions    MissionUser[]
   redemptions PrizeRedemption[]
 
   @@map("users")
 }
 
 ///Empresas
-model Corporate {
-  id        Int       @id @default(autoincrement()) /// Identificador do registro.
-  userId    Int       @unique @map("user_id") /// Id do registro de endereço.
-  name      String /// Razão social da empresa
-  userName  String    @map("user_name") /// Nome do responsável da empresa
-  userCpf   String    @map("user_cpf") /// CPF do responsável da empresa
-  createdAt DateTime  @default(now()) @map("created_at") /// Data de criação.
-  updatedAt DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
-  deletedAt DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
+model Corporation {
+  id                  Int             @id @default(autoincrement()) /// Identificador do registro.
+  addressId           Int             @unique() @map("address_id") /// Id do registro de endereço.
+  logoId              Int?            @unique @map("logo_id") /// Id do registro de endereço.
+  legalName           String          @map("legal_name") /// Razão social da empresa
+  businessName        String          @map("business_name") /// Nome Fantasia da empresa
+  responsibleName     String          @map("responsible_name") /// Nome do responsável da empresa
+  responsibleDocument String          @map("responsible_document") /// CPF do responsável da empresa
+  totalPoints         Int             @map("total_points") /// Total de pontos da empresa
+  email               String /// Email da empresa
+  document            String /// Documento (CNPJ) da empresa
+  password            String /// Senha
+  salt                String /// Salt da senha para encriptação
+  phone               String? /// Telefone de contato
+  alternativePhone    String?         @map("alternative_phone") /// Telefone alternativo para o contato
+  socialMedia         String?         @map("social_media") /// Rede Social
+  type                CorporationType /// Tipo da empresa
+  createdAt           DateTime        @default(now()) @map("created_at") /// Data de criação.
+  updatedAt           DateTime        @updatedAt @map("updated_at") /// Data da última atualização.
+  deletedAt           DateTime?       @map("deleted_at") /// Data da exclusão (soft delete).
 
-  user User @relation(fields: [userId], references: [id])
+  address Address     @relation(fields: [addressId], references: [id])
+  avatar  StoredFile? @relation(fields: [logoId], references: [id])
 
   missions Mission[]
   awards   Award[]
 
-  @@map("comporations")
+  @@map("corporations")
 }
 
 /// Missões
@@ -109,7 +114,7 @@ model Mission {
   updatedAt     DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
   deletedAt     DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
 
-  intitution Corporate @relation(fields: [institutionId], references: [id])
+  institution Corporation @relation(fields: [institutionId], references: [id])
 
   missionUsers MissionUser[]
 
@@ -136,14 +141,14 @@ model MissionUser {
 /// Detalhes das missões feitas pelos usuários
 model MissionDetail {
   id            Int       @id @default(autoincrement()) /// Identificador do registro.
-  fileId        Int       @map("file_id") /// Id do registro de arquivo
+  fileId        Int       @unique @map("file_id") /// Id do registro de arquivo
   missionUserId Int       @map("mission_user_id") /// Id do registro da missão sendo realizada pelo usuário
   description   String /// Descrição das operações realizadas na missão
   createdAt     DateTime  @default(now()) @map("created_at") /// Data de criação.
   updatedAt     DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
   deletedAt     DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
 
-  file        StorageFile @relation(fields: [fileId], references: [id])
+  file        StoredFile  @relation(fields: [fileId], references: [id])
   missionUser MissionUser @relation(fields: [missionUserId], references: [id])
 
   @@map("mission_details")
@@ -161,7 +166,7 @@ model Award {
   updatedAt   DateTime  @updatedAt @map("updated_at") /// Data da última atualização.
   deletedAt   DateTime? @map("deleted_at") /// Data da exclusão (soft delete).
 
-  sponsor Corporate @relation(fields: [sponsorId], references: [id])
+  sponsor Corporation @relation(fields: [sponsorId], references: [id])
 
   redemptions PrizeRedemption[]
 
@@ -186,9 +191,12 @@ model PrizeRedemption {
 /// Tipo de usuário
 enum UserType {
   PLAYER /// Usuários comuns
+  ADMIN /// Administradores
+}
+
+enum CorporationType {
   INSTITUTION /// Instituições
   SPONSOR /// Patrocinadores
-  ADMIN /// Administradores
 }
 
 /// Status das missões resgatadas pelos usuários
