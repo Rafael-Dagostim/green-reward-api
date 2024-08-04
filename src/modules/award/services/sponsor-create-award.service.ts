@@ -13,7 +13,10 @@ export default class SponsorCreateAwardService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async execute(dto: AwardCreateDto, sponsor: CorporationEntity): Promise<AwardEntity> {
+  public async execute(
+    dto: AwardCreateDto,
+    sponsor: CorporationEntity,
+  ): Promise<AwardEntity> {
     const points = this.calcPoints(dto.unitPrice, dto.quantity);
     const data = await this.prismaService.award.create({
       data: this.serializeAward(dto, points.unit) as Award,
@@ -54,8 +57,13 @@ export default class SponsorCreateAwardService {
     });
   }
 
-  private calcPoints(valueUnit: number, count: number): { unit: number; total: number } {
-    const valuePointsByBRL = this.configService.getOrThrow<number>('POINT_VALUE_PER_BRL');
+  private calcPoints(
+    valueUnit: number,
+    count: number,
+  ): { unit: number; total: number } {
+    const valuePointsByBRL = this.configService.getOrThrow<number>(
+      'POINT_VALUE_PER_BRL',
+    );
     const valueInPoints = valueUnit / valuePointsByBRL;
     return {
       unit: Math.round(valueInPoints),

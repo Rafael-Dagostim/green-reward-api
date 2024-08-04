@@ -8,12 +8,18 @@ import { PrizeRedemptionEntity } from '@shared/entities/prize-redemption.entity'
 export default class RescueAwardService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async execute(awardId: number, userId: number): Promise<{ link: string }> {
+  public async execute(
+    awardId: number,
+    userId: number,
+  ): Promise<{ link: string }> {
     const award = await this.findAward(awardId);
     const user = await this.findUser(userId);
 
     if (award.pricePoints > user.totalPoints) {
-      throw new HttpException('O usuário não possui a quantidade de pontos necessários', 409);
+      throw new HttpException(
+        'O usuário não possui a quantidade de pontos necessários',
+        409,
+      );
     }
 
     if (award.redeemQuantity <= 0) {
@@ -68,7 +74,10 @@ export default class RescueAwardService {
     return new UserEntity(player);
   }
 
-  private async saveLogs(awardId: number, userId: number): Promise<PrizeRedemptionEntity> {
+  private async saveLogs(
+    awardId: number,
+    userId: number,
+  ): Promise<PrizeRedemptionEntity> {
     const prizeRedemption = new PrizeRedemptionEntity({
       awardId,
       playerId: userId,
