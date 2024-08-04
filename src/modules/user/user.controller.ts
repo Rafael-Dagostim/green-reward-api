@@ -21,13 +21,13 @@ import { UserDeleteService } from './services/user-delete.service';
 import { UserFindManyService } from './services/user-find-many.service';
 import { UserFindOneService } from './services/user-find-one.service';
 import { UserUpdateService } from './services/user-update.service';
-import { Public, TypesAllowed } from '@shared/decorators';
+import { Public, AllowedTypes } from '@shared/decorators';
 import { TypeGuard } from '@modules/auth/guards/type.guard';
 
 @ApiTags('user')
 @Controller('user')
 @UseGuards(TypeGuard)
-@TypesAllowed('ADMIN', 'PLAYER')
+@AllowedTypes('ADMIN', 'PLAYER')
 export class UserController {
   constructor(
     private readonly userFindManyService: UserFindManyService,

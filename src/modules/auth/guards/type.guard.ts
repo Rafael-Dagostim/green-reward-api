@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { $Enums } from '@prisma/client';
-import { TYPE_AUTH } from '@shared/decorators/types-allowed.decorator';
+import { TYPE_AUTH } from '@shared/decorators';
 import { UserOrCorporation } from '@shared/types';
 
 @Injectable()

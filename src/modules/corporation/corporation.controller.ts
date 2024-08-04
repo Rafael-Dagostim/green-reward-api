@@ -13,7 +13,7 @@ import {
 
 import { TypeGuard } from '@modules/auth/guards/type.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { Public, TypesAllowed, User } from '@shared/decorators';
+import { Public, AllowedTypes, User } from '@shared/decorators';
 import { CorporationCreateDto } from './domain/dto/corporation-create.dto';
 import { CorporationFindManyDto } from './domain/dto/corporation-find-many.dto';
 import { CorporationUpdateDto } from './domain/dto/corporation-update.dto';
@@ -28,7 +28,7 @@ import SponsorTransferPointsToInstitutionService from './services/sponsor-transf
 @ApiTags('corporation')
 @Controller('corporation')
 @UseGuards(TypeGuard)
-@TypesAllowed('INSTITUTION', 'SPONSOR')
+@AllowedTypes('INSTITUTION', 'SPONSOR')
 export class CorporationController {
   constructor(
     private readonly corporationFindManyService: CorporationFindManyService,
