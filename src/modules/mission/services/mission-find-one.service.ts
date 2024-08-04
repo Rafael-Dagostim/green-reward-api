@@ -1,6 +1,8 @@
 import PrismaService from 'src/core/database/connection.database.service';
 import { MissionEntity } from '../domain/entities/mission.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class MissionFindOneService {
   constructor(private readonly prisma: PrismaService) {}
 

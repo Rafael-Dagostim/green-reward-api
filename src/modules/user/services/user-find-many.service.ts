@@ -2,7 +2,9 @@ import { Prisma } from '@prisma/client';
 import { UserFindManyDto } from '../domain/dto/user-find-many.dto';
 import { UserEntity } from '../domain/entities/user.entity';
 import PrismaService from 'src/core/database/connection.database.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 

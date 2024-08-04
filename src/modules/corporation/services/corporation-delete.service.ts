@@ -1,6 +1,8 @@
 import PrismaService from 'src/core/database/connection.database.service';
 import { CorporationEntity } from '../domain/entities/corporation.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CorporationDeleteService {
   constructor(private readonly prisma: PrismaService) {}
 

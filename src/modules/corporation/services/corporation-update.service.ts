@@ -1,7 +1,9 @@
 import PrismaService from 'src/core/database/connection.database.service';
 import { CorporationUpdateDto } from '../domain/dto/corporation-update.dto';
 import { CorporationEntity } from '../domain/entities/corporation.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CorporationUpdateService {
   constructor(private readonly prisma: PrismaService) {}
 

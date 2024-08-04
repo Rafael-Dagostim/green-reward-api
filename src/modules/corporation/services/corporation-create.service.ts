@@ -2,7 +2,9 @@ import { genSalt, hash } from 'bcrypt';
 import PrismaService from 'src/core/database/connection.database.service';
 import { CorporationCreateDto } from '../domain/dto/corporation-create.dto';
 import { CorporationEntity } from '../domain/entities/corporation.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CorporationCreateService {
   constructor(private readonly prisma: PrismaService) {}
 
