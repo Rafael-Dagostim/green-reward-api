@@ -2,12 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
-import PrismaService from 'src/core/database/connection.database.service';
+import PrismaService from '@core/database/connection.database.service';
 import { UserEntity } from '../../user/domain/entities/user.entity';
 import { LoginResponse } from '../domain/dto/login-response.dto';
 import { LoginDto } from '../domain/dto/login.dto';
 import { JwtContent } from '../domain/types/jwt-content.type';
-import { CorporationEntity } from 'src/modules/corporation/domain/entities/corporation.entity';
+import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
 
 @Injectable()
 export class LoginService {
@@ -45,7 +45,9 @@ export class LoginService {
     return this.createLoginResponse(entity);
   }
 
-  async executeCorporationLogin(dto: LoginDto): Promise<LoginResponse<CorporationEntity>> {
+  async executeCorporationLogin(
+    dto: LoginDto,
+  ): Promise<LoginResponse<CorporationEntity>> {
     const corporation = await this.prisma.corporation.findFirst({
       where: {
         OR: [
@@ -69,7 +71,10 @@ export class LoginService {
     password: string,
     entity: T,
   ): Promise<boolean> {
-    const hashPassword = await hash(password, `${entity.salt}${this.passwordPepper}`);
+    const hashPassword = await hash(
+      password,
+      `${entity.salt}${this.passwordPepper}`,
+    );
     return compare(hashPassword, entity.password);
   }
 

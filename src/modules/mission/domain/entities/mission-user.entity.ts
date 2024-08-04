@@ -1,6 +1,6 @@
 import { $Enums, MissionUser } from '@prisma/client';
 import { MissionEntity } from './mission.entity';
-import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 
 export class MissionUserEntity implements MissionUser {
   id: number;

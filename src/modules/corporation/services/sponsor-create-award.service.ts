@@ -1,9 +1,9 @@
-import PrismaService from 'src/core/database/connection.database.service';
+import PrismaService from '@core/database/connection.database.service';
 import { SponsorCreateAwardDTO } from '../domain/dto/sponsor-create-award.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpException, Injectable } from '@nestjs/common';
 import { CorporationEntity } from '../domain/entities/corporation.entity';
-import { AwardEntity } from 'src/shared/entities/award.entity';
+import { AwardEntity } from '@shared/entities/award.entity';
 import { Award } from '@prisma/client';
 
 @Injectable()

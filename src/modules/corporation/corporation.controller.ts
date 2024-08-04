@@ -22,7 +22,7 @@ import { CorporationFindOneService } from './services/corporation-find-one.servi
 import { CorporationUpdateService } from './services/corporation-update.service';
 import SponsorCreateAwardService from './services/sponsor-create-award.service';
 import { SponsorCreateAwardDTO } from './domain/dto/sponsor-create-award.dto';
-import { AwardEntity } from 'src/shared/entities/award.entity';
+import { AwardEntity } from '@shared/entities/award.entity';
 
 @ApiTags('corporation')
 @Controller('corporation')

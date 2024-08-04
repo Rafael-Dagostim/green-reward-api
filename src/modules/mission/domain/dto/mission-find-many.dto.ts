@@ -1,4 +1,4 @@
-import { PaginationRequestDto } from 'src/shared/dtos/pagination';
+import { PaginationRequestDto } from '@shared/dtos/pagination';
 
 export class MissionFindManyDto extends PaginationRequestDto {
   name: string;

@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import PrismaService from 'src/core/database/connection.database.service';
+import PrismaService from '@core/database/connection.database.service';
 import { MissionFindManyDto } from '../domain/dto/mission-find-many.dto';
 import { MissionEntity } from '../domain/entities/mission.entity';
 import { Injectable } from '@nestjs/common';

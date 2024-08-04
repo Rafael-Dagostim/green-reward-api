@@ -1,4 +1,4 @@
-import PrismaService from 'src/core/database/connection.database.service';
+import PrismaService from '@core/database/connection.database.service';
 import { MissionEntity } from '../domain/entities/mission.entity';
 import { Injectable } from '@nestjs/common';
 

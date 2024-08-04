@@ -5,7 +5,7 @@ import { UserEntity } from '../user/domain/entities/user.entity';
 import { LoginResponse } from './domain/dto/login-response.dto';
 import { CorporationEntity } from '../corporation/domain/entities/corporation.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/shared/decorators';
+import { Public } from '@shared/decorators';
 
 @ApiTags('auth')
 @Controller('auth')

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '@prisma/client';
 import { IsEnum } from 'class-validator';
-import { AddressCreateDto } from 'src/shared/dtos/address-create.dto';
+import { AddressCreateDto } from '@shared/dtos/address-create.dto';
 
 export class CorporationCreateDto {
   @ApiProperty({ description: 'Razão social' })

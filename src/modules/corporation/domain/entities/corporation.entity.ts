@@ -1,6 +1,6 @@
 import { $Enums, Corporation } from '@prisma/client';
 import { Exclude } from 'class-transformer';
-import { AwardEntity } from 'src/shared/entities/award.entity';
+import { AwardEntity } from '@shared/entities/award.entity';
 
 export class CorporationEntity implements Corporation {
   id: number;

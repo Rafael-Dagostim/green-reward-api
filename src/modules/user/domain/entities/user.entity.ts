@@ -1,7 +1,7 @@
 import { $Enums, User } from '@prisma/client';
 import { Exclude } from 'class-transformer';
-import { AddressEntity } from 'src/shared/entities/address.entity';
-import { StoredFileEntity } from 'src/shared/entities/stored-files.entity';
+import { AddressEntity } from '@shared/entities/address.entity';
+import { StoredFileEntity } from '@shared/entities/stored-files.entity';
 
 export class UserEntity implements User {
   id: number;

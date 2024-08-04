@@ -1,5 +1,5 @@
-import { CorporationEntity } from 'src/modules/corporation/domain/entities/corporation.entity';
-import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 
 export class LoginResponse<T extends UserEntity | CorporationEntity> {
   entity: T;

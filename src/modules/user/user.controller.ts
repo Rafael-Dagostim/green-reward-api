@@ -20,7 +20,7 @@ import { UserDeleteService } from './services/user-delete.service';
 import { UserFindManyService } from './services/user-find-many.service';
 import { UserFindOneService } from './services/user-find-one.service';
 import { UserUpdateService } from './services/user-update.service';
-import { Public } from 'src/shared/decorators';
+import { Public } from '@shared/decorators';
 
 @ApiTags('user')
 @Controller('user')
