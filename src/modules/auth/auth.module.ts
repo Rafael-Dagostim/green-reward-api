@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import TokenService from './services/token.service';
+import RefreshTokenService from './services/refresh-token.service';
 
 @Module({
   imports: [
@@ -20,12 +22,14 @@ import { JwtAuthGuard } from './guards/jwt.guard';
   ],
   controllers: [AuthController],
   providers: [
+    TokenService,
+    RefreshTokenService,
     LoginService,
     JwtStrategy,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // }, // TODO liberando acesso total as rotas para teste
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AuthModule {}

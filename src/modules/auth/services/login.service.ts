@@ -1,13 +1,13 @@
+import PrismaService from '@core/database/connection.database.service';
+import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
-import PrismaService from '@core/database/connection.database.service';
-import { UserEntity } from '@modules/user/domain/entities/user.entity';
-import { LoginResponse } from '../domain/dto/login-response.dto';
+import { LoginResponseDto } from '../domain/dto/login-response.dto';
 import { LoginDto } from '../domain/dto/login.dto';
 import { JwtContent } from '../domain/types/jwt-content.type';
-import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
+import TokenService from './token.service';
 
 @Injectable()
 export class LoginService {
@@ -19,13 +19,13 @@ export class LoginService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
+    private readonly tokenService: TokenService,
     config: ConfigService,
   ) {
     this.passwordPepper = config.getOrThrow('PWD_PEPPER');
   }
 
-  async executeUserLogin(dto: LoginDto): Promise<LoginResponse<UserEntity>> {
+  async executeUserLogin(dto: LoginDto): Promise<LoginResponseDto<UserEntity>> {
     const user = await this.prisma.user.findFirst({
       where: {
         OR: [
@@ -46,7 +46,7 @@ export class LoginService {
     return this.createLoginResponse(entity);
   }
 
-  async executeCorporationLogin(dto: LoginDto): Promise<LoginResponse<CorporationEntity>> {
+  async executeCorporationLogin(dto: LoginDto): Promise<LoginResponseDto<CorporationEntity>> {
     const corporation = await this.prisma.corporation.findFirst({
       where: {
         OR: [
@@ -75,18 +75,20 @@ export class LoginService {
     return compare(hashPassword, entity.password);
   }
 
-  private createLoginResponse<T extends UserEntity | CorporationEntity>(
+  private async createLoginResponse<T extends UserEntity | CorporationEntity>(
     entity: T,
-  ): LoginResponse<T> {
+  ): Promise<LoginResponseDto<T>> {
     const jwtContent: JwtContent = {
       entityId: entity.id,
       type: entity.type,
     };
 
+    const { token, refresh } = await this.tokenService.execute(jwtContent);
+
     return {
       entity,
-      token: this.jwtService.sign(jwtContent),
-      refresh: this.jwtService.sign(jwtContent, { expiresIn: '7d' }),
+      token,
+      refresh,
     };
   }
 }
