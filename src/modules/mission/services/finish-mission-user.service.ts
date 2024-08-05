@@ -1,20 +1,16 @@
 import PrismaService from '@core/database/connection.database.service';
 import { MissionUserEntity } from '../domain/entities/mission-user.entity';
 import { FinishMissionUserDTO } from '../domain/dto/finish-mission-user.dto';
-import { MissionDetailEntity } from '../domain/entities/mission_detail.entity';
 import { $Enums, MissionDetail, MissionUser, User } from '@prisma/client';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { HttpException } from '@nestjs/common';
 import { MissionEntity } from '../domain/entities/mission.entity';
+import { MissionDetailEntity } from '../domain/entities/mission-detail.entity';
 
 export default class FinishMissionUserService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async execute(
-    id: number,
-    user: UserEntity,
-    dto: FinishMissionUserDTO,
-  ) {
+  public async execute(id: number, user: UserEntity, dto: FinishMissionUserDTO) {
     const missionUser = await this.findMissionUser(id, user.id);
     const mission = await this.findMission(id);
 
@@ -66,10 +62,7 @@ export default class FinishMissionUserService {
     return new MissionEntity(mission);
   }
 
-  private async findMissionUser(
-    id: number,
-    userId: number,
-  ): Promise<MissionUserEntity> {
+  private async findMissionUser(id: number, userId: number): Promise<MissionUserEntity> {
     const missionUser = await this.prismaService.missionUser.findFirst({
       where: {
         missionId: id,

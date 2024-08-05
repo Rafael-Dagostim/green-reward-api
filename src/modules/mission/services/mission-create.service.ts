@@ -8,10 +8,7 @@ import { NotEnoughPointsException } from '@shared/exceptions/not-enougth-points.
 export class MissionCreateService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(
-    dto: MissionCreateDto,
-    institutionId: number,
-  ): Promise<MissionEntity> {
+  async execute(dto: MissionCreateDto, institutionId: number): Promise<MissionEntity> {
     const institution = await this.prisma.corporation.findUnique({
       where: { id: institutionId },
     });
@@ -19,10 +16,7 @@ export class MissionCreateService {
 
     if (institution.totalPoints < totalMissionPoints) {
       const missingPoints = totalMissionPoints - institution.totalPoints;
-      throw new NotEnoughPointsException(
-        institution.totalPoints,
-        missingPoints,
-      );
+      throw new NotEnoughPointsException(institution.totalPoints, missingPoints);
     }
 
     const mission = await this.prisma.mission.create({
