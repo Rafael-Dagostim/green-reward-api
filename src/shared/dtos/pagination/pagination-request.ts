@@ -6,20 +6,22 @@ export class PaginationRequestDto {
   @IsDefined()
   @Transform(({ value }) => Number(value))
   @IsNumber()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   readonly page: number = 1;
 
   @IsDefined()
   @Transform(({ value }) => Number(value))
   @IsNumber()
-  @ApiProperty()
+  @IsOptional()
+  @ApiProperty({ required: false })
   readonly pageSize: number = 10;
 
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   ordering?: 'asc' | 'desc' = 'asc';
 
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   orderBy?: string;
 }

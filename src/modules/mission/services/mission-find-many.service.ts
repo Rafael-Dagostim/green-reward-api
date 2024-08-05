@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 export class MissionFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(dto: MissionFindManyDto): Promise<MissionEntity[]> {
+  async execute(dto?: MissionFindManyDto): Promise<MissionEntity[]> {
     const where = this.createWhereFilter(dto);
     const orderBy = this.setColumnOrdering(dto);
 
