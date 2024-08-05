@@ -1,5 +1,3 @@
-import { PaginationRequestDto } from '@shared/dtos/pagination';
-
-export class MissionFindManyDto extends PaginationRequestDto {
+export class MissionFindManyDto {
   name?: string;
 }

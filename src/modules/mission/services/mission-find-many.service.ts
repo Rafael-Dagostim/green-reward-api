@@ -1,27 +1,19 @@
-import { Prisma } from '@prisma/client';
 import PrismaService from '@core/database/connection.database.service';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { MissionFindManyDto } from '../domain/dto/mission-find-many.dto';
 import { MissionEntity } from '../domain/entities/mission.entity';
-import { Injectable } from '@nestjs/common';
-import { PaginationRequestDto } from '@shared/dtos/pagination';
 
 @Injectable()
 export class MissionFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto?: MissionFindManyDto): Promise<MissionEntity[]> {
-    if (!dto) dto = new PaginationRequestDto();
     const where = this.createWhereFilter(dto);
-    const orderBy = this.setColumnOrdering(dto);
 
     const missions = await this.prisma.mission.findMany({
       where,
-      orderBy,
-
       include: { tags: true },
-
-      skip: (dto.page - 1) * dto.pageSize,
-      take: dto.pageSize,
     });
 
     return missions.map((mission) => new MissionEntity(mission, mission.tags));
@@ -35,10 +27,5 @@ export class MissionFindManyService {
     if (dto.name) where.AND = { ...where.AND, name: { contains: dto.name, mode: 'insensitive' } };
 
     return where;
-  }
-
-  private setColumnOrdering(params: MissionFindManyDto): Prisma.MissionOrderByWithRelationInput {
-    if (!params.orderBy) return { id: params.ordering };
-    return { [params.orderBy]: params.ordering };
   }
 }

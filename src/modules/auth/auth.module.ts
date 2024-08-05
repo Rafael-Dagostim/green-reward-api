@@ -26,10 +26,10 @@ import RefreshTokenService from './services/refresh-token.service';
     RefreshTokenService,
     LoginService,
     JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
   ],
 })
 export class AuthModule {}
