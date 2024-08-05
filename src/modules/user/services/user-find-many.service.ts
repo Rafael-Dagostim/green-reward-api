@@ -3,12 +3,14 @@ import { UserFindManyDto } from '../domain/dto/user-find-many.dto';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import PrismaService from '@core/database/connection.database.service';
 import { Injectable } from '@nestjs/common';
+import { PaginationRequestDto } from '@shared/dtos/pagination';
 
 @Injectable()
 export class UserFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto: UserFindManyDto): Promise<UserEntity[]> {
+    if (!dto) dto = new PaginationRequestDto();
     const where = this.createWhereFilter(dto);
     const orderBy = this.setColumnOrdering(dto);
 

@@ -3,12 +3,14 @@ import PrismaService from '@core/database/connection.database.service';
 import { MissionFindManyDto } from '../domain/dto/mission-find-many.dto';
 import { MissionEntity } from '../domain/entities/mission.entity';
 import { Injectable } from '@nestjs/common';
+import { PaginationRequestDto } from '@shared/dtos/pagination';
 
 @Injectable()
 export class MissionFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto?: MissionFindManyDto): Promise<MissionEntity[]> {
+    if (!dto) dto = new PaginationRequestDto();
     const where = this.createWhereFilter(dto);
     const orderBy = this.setColumnOrdering(dto);
 

@@ -3,12 +3,14 @@ import PrismaService from '@core/database/connection.database.service';
 import { CorporationFindManyDto } from '../domain/dto/corporation-find-many.dto';
 import { CorporationEntity } from '../domain/entities/corporation.entity';
 import { Injectable } from '@nestjs/common';
+import { PaginationRequestDto } from '@shared/dtos/pagination';
 
 @Injectable()
 export class CorporationFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(dto: CorporationFindManyDto): Promise<CorporationEntity[]> {
+    if (!dto) dto = new PaginationRequestDto();
     const where = this.createWhereFilter(dto);
     const orderBy = this.setColumnOrdering(dto);
 
@@ -20,14 +22,10 @@ export class CorporationFindManyService {
       take: dto.pageSize ?? 50,
     });
 
-    return corporations.map(
-      (corporation) => new CorporationEntity(corporation),
-    );
+    return corporations.map((corporation) => new CorporationEntity(corporation));
   }
 
-  private createWhereFilter(
-    dto: CorporationFindManyDto,
-  ): Prisma.CorporationWhereInput {
+  private createWhereFilter(dto: CorporationFindManyDto): Prisma.CorporationWhereInput {
     const where: Prisma.CorporationWhereInput = {
       deletedAt: null,
     };

@@ -4,15 +4,15 @@ import { Injectable } from '@nestjs/common';
 import { AwardEntity } from '../domain/entities/award.entity';
 import { GetAwardDTO } from '../domain/dto/get-award.dto';
 import { CorporationEntity } from '@modules/corporation/domain/entities/corporation.entity';
+import { PaginationRequestDto } from '@shared/dtos/pagination';
 
 @Injectable()
 export class AwardFindManyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(
-    dto: GetAwardDTO,
-    sponsor: CorporationEntity,
-  ): Promise<AwardEntity[]> {
+  async execute(dto: GetAwardDTO, sponsor: CorporationEntity): Promise<AwardEntity[]> {
+    if (!dto) dto = new PaginationRequestDto();
+
     const where = this.createWhereFilter(sponsor);
     const orderBy = this.setColumnOrdering(dto);
 
@@ -27,9 +27,7 @@ export class AwardFindManyService {
     return awards.map((corporation) => new AwardEntity(corporation));
   }
 
-  private createWhereFilter(
-    sponsor: CorporationEntity,
-  ): Prisma.AwardWhereInput {
+  private createWhereFilter(sponsor: CorporationEntity): Prisma.AwardWhereInput {
     const where: Prisma.AwardWhereInput = {
       deletedAt: null,
     };
@@ -41,9 +39,7 @@ export class AwardFindManyService {
     return where;
   }
 
-  private setColumnOrdering(
-    params: GetAwardDTO,
-  ): Prisma.CorporationOrderByWithRelationInput {
+  private setColumnOrdering(params: GetAwardDTO): Prisma.CorporationOrderByWithRelationInput {
     if (!params.orderBy) return { id: params.ordering };
     return { [params.orderBy]: params.ordering };
   }
