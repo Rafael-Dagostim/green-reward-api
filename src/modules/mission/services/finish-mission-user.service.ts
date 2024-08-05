@@ -3,10 +3,11 @@ import { MissionUserEntity } from '../domain/entities/mission-user.entity';
 import { FinishMissionUserDTO } from '../domain/dto/finish-mission-user.dto';
 import { $Enums, MissionDetail, MissionUser, User } from '@prisma/client';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
-import { HttpException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { MissionEntity } from '../domain/entities/mission.entity';
 import { MissionDetailEntity } from '../domain/entities/mission-detail.entity';
 
+@Injectable()
 export default class FinishMissionUserService {
   public constructor(private readonly prismaService: PrismaService) {}
 
@@ -19,6 +20,10 @@ export default class FinishMissionUserService {
       description: dto.description,
     });
 
+    if (mission.totalCall <= 0) {
+      throw new HttpException('Essa missão não pode mais ser resgatada', 404);
+    }
+
     missionUser.status = $Enums.MissionUserStatus.CONCLUDED;
 
     await this.prismaService.missionUser.update({
@@ -29,6 +34,7 @@ export default class FinishMissionUserService {
     });
 
     user.totalPoints += mission.points;
+    mission.totalCall -= 1;
 
     await this.prismaService.pointsLog.create({
       data: {

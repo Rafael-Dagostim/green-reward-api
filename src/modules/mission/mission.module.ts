@@ -8,6 +8,7 @@ import { MissionFindManyService } from './services/mission-find-many.service';
 import { MissionFindOneService } from './services/mission-find-one.service';
 import { MissionUpdateService } from './services/mission-update.service';
 import FinishMissionUserService from './services/finish-mission-user.service';
+import PickMissionUserService from './services/pick-mission-user.service';
 
 @Module({
   controllers: [MissionController],
@@ -18,6 +19,7 @@ import FinishMissionUserService from './services/finish-mission-user.service';
     MissionUpdateService,
     MissionDeleteService,
     FinishMissionUserService,
+    PickMissionUserService,
   ],
 })
 export class MissionModule {}
