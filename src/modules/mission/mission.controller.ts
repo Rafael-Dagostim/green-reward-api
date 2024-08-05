@@ -70,10 +70,7 @@ export class MissionController {
    */
   @Post()
   @AllowedTypes('INSTITUTION')
-  create(
-    @Body() dto: MissionCreateDto,
-    @User() user: CorporationEntity,
-  ): Promise<MissionEntity> {
+  create(@Body() dto: MissionCreateDto, @User() user: CorporationEntity): Promise<MissionEntity> {
     return this.missionCreateService.execute(dto, user.id);
   }
 
