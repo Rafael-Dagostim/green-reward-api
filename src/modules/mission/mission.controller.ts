@@ -27,6 +27,7 @@ import FinishMissionUserService from './services/finish-mission-user.service';
 import { AllowedTypes, User } from '@shared/decorators';
 import { FinishMissionUserDTO } from './domain/dto/finish-mission-user.dto';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
+import PickMissionUserService from './services/pick-mission-user.service';
 
 @ApiTags('mission')
 @Controller('mission')
@@ -39,6 +40,7 @@ export class MissionController {
     private readonly missionUpdateService: MissionUpdateService,
     private readonly missionDeleteService: MissionDeleteService,
     private readonly finishMissionService: FinishMissionUserService,
+    private readonly pickMissionService: PickMissionUserService,
   ) {}
 
   /**
@@ -73,6 +75,15 @@ export class MissionController {
     @User() user: CorporationEntity,
   ): Promise<MissionEntity> {
     return this.missionCreateService.execute(dto, user.id);
+  }
+
+  /**
+   * Usuário pegar nova missão
+   */
+  @Post(':id')
+  @AllowedTypes('PLAYER')
+  pickMission(@Param('id') id: number, @User() user: UserEntity) {
+    return this.pickMissionService.execute(id, user.id);
   }
 
   /**

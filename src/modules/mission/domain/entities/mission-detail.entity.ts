@@ -19,7 +19,8 @@ export class MissionDetailEntity implements MissionDetail {
 
   constructor(partial: Partial<MissionDetailEntity>) {
     const file = partial.file && new StoredFileEntity(partial.file);
-    const missionUser = partial.missionUser && new MissionUserEntity(partial.missionUser);
+    const missionUser =
+      partial.missionUser && new MissionUserEntity(partial.missionUser);
 
     Object.assign(this, { ...partial, mission: file, user: missionUser });
   }
