@@ -17,10 +17,7 @@ export default class SponsorTransferPointsToInstitutionService {
     const sponsor = await this.findSponsor(sponsorId);
 
     if (sponsor.totalPoints < points) {
-      throw new HttpException(
-        'A quantidade de pontos é superior ao limite possuído',
-        409,
-      );
+      throw new HttpException('A quantidade de pontos é superior ao limite possuído', 409);
     }
     sponsor.totalPoints -= points;
     institution.totalPoints += points;
@@ -78,7 +75,7 @@ export default class SponsorTransferPointsToInstitutionService {
       points,
       sponsorId,
     });
-    return await this.prismaService.pointsTransfer.create({
+    return this.prismaService.pointsTransfer.create({
       data: logs,
     });
   }

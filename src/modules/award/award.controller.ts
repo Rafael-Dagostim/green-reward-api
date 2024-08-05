@@ -20,6 +20,7 @@ import { TypeGuard } from '@modules/auth/guards/type.guard';
 import { AwardFindManyService } from './services/get-award.service';
 import { GetAwardDTO } from './domain/dto/get-award.dto';
 import DeleteAwardService from './services/delete-award.service';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
 
 @Controller('award')
 @ApiTags('award')
@@ -37,12 +38,9 @@ export default class AwardController {
    * @param dto Filtros
    * @returns Dados dos premios
    */
-  @Get('')
-  public async get(
-    @Query() dto: GetAwardDTO,
-    @User() sponsor: CorporationEntity,
-  ) {
-    return await this.getAwardService.execute(dto, sponsor);
+  @Get()
+  public async get(@Query() dto: GetAwardDTO, @User() sponsor: CorporationEntity) {
+    return this.getAwardService.execute(dto, sponsor);
   }
   /**
    * Criar novo premio com o nome do patrocinador
@@ -55,7 +53,7 @@ export default class AwardController {
     @Body() dto: AwardCreateDto,
     @User() sponsor: CorporationEntity,
   ): Promise<AwardEntity> {
-    return await this.sponsorCreateAwardService.execute(dto, sponsor);
+    return this.sponsorCreateAwardService.execute(dto, sponsor);
   }
 
   /**
@@ -68,9 +66,9 @@ export default class AwardController {
   @AllowedTypes('PLAYER')
   async rescueAward(
     @Param('id') awardId: number,
-    @Param('userId') userId: number,
+    @User() player: UserEntity,
   ): Promise<{ link: string }> {
-    return await this.rescueAwardService.execute(awardId, userId);
+    return this.rescueAwardService.execute(awardId, player.id);
   }
 
   /**
@@ -79,7 +77,7 @@ export default class AwardController {
    */
   @Delete('/:id')
   @AllowedTypes('PLAYER')
-  async deleteAward(@Param('id') awardId: number) {
-    return await this.deleteAwardService.execute(awardId);
+  async deleteAward(@Param('id') awardId: number): Promise<AwardEntity> {
+    return this.deleteAwardService.execute(awardId);
   }
 }

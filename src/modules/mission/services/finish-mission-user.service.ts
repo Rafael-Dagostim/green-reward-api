@@ -45,7 +45,7 @@ export default class FinishMissionUserService {
       data: user as User,
     });
 
-    return await this.prismaService.missionDetail.create({
+    return this.prismaService.missionDetail.create({
       data: details as MissionDetail,
     });
   }
