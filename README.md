@@ -1,73 +1,128 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# GreenReward API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> Backend da plataforma **GreenReward** — uma aplicação que premia boas ações sustentáveis com um sistema de pontos resgatáveis em prêmios.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A API gerencia usuários, corporações parceiras, missões (boas ações), pontuação acumulada e resgate de prêmios. Pontos podem ser transferidos entre usuários e convertidos em recompensas oferecidas pelas corporações.
 
-## Description
+## Domínio
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **User** — pessoa física que executa missões e acumula pontos.
+- **Corporation** — empresa parceira que oferece missões e prêmios.
+- **Mission** — boa ação proposta (com tags, detalhes e recompensa em pontos).
+- **MissionUser** — vínculo de execução de uma missão por um usuário (com status).
+- **Award / PrizeRedemption** — prêmios disponíveis e seu resgate via pontos.
+- **PointsLog / PointsTransfer** — histórico de pontuação e transferências entre usuários.
+- **Address / StoredFile** — entidades de apoio (endereço, arquivos como fotos de comprovação).
 
-## Installation
+## Stack
 
-```bash
-$ npm install
+- **NestJS 10** (Node.js + TypeScript)
+- **PostgreSQL** + **Prisma ORM**
+- **JWT** + **Passport** para autenticação
+- **bcrypt** + pepper para hashing de senha
+- **Helmet** para hardening de headers
+- **class-validator** / **class-transformer** para validação de DTOs
+- **Swagger** (`@nestjs/swagger`) para documentação automática
+- **Poku** para testes
+- **Docker Compose** para ambiente de desenvolvimento
+
+## Estrutura
+
+```
+src/
+├── main.ts               # bootstrap (Helmet, Swagger, validação)
+├── app.module.ts
+├── core/                 # configurações, decorators, guards globais
+├── shared/               # helpers e utilitários compartilhados
+└── modules/
+    ├── auth/             # login, JWT, estratégias Passport
+    ├── user/             # cadastro e perfil de usuários
+    ├── corporation/      # empresas parceiras
+    ├── mission/          # missões (boas ações) e execuções
+    └── award/            # prêmios e resgates
+prisma/
+├── schema.prisma         # modelo de dados completo
+├── migrations/
+└── seed.ts               # dados iniciais
 ```
 
-## Running the app
+## Rodando localmente
+
+### Pré-requisitos
+
+- Node.js 16+
+- Docker + Docker Compose (para subir o Postgres)
+- Ou um PostgreSQL local na porta 5432
+
+### Setup
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/Rafael-Dagostim/green-reward-api.git
+cd green-reward-api
+npm install
+cp .env.example .env
 ```
 
-## Test
+Preencha o `.env`:
+
+```env
+DATABASE_URL=postgresql://postgres:password@localhost:5432/green-rewards
+PORT=3000
+JWT_SECRET=<segredo-jwt>
+PWD_PEPPER=<pepper-para-senhas>
+POINT_VALUE_PER_BRL=10
+```
+
+### Subir o banco
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up -d db
 ```
 
-## Support
+### Aplicar migrations e seed
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run database:migration:run   # roda migrations + gera client Prisma
+npx prisma db seed               # popula com dados iniciais
+```
 
-## Stay in touch
+### Rodar a API
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run start:dev    # modo watch
+# ou
+npm run start        # modo normal
+```
 
-## License
+A documentação Swagger fica disponível em `http://localhost:<PORT>/api`.
 
-Nest is [MIT licensed](LICENSE).
+## Scripts úteis
+
+| Script | Descrição |
+|---|---|
+| `npm run start:dev` | API com hot-reload |
+| `npm run start:debug` | API em modo debug com watch |
+| `npm run build` | Build de produção |
+| `npm run start:prod` | Roda a build (`dist/main`) |
+| `npm run lint` | ESLint com `--fix` |
+| `npm run format` | Prettier nos fontes |
+| `npm run test:run` | Roda os testes via Poku |
+| `npm run database:migration:generate` | Cria nova migration a partir do schema |
+| `npm run database:migration:run:prod` | Aplica migrations em produção |
+
+## Autenticação
+
+A API usa JWT via header `Authorization: Bearer <token>`. O fluxo é:
+
+1. `POST /auth/login` com credenciais → retorna JWT.
+2. Anexar o token em todas as requisições autenticadas.
+
+Senhas são armazenadas com bcrypt + pepper (definido em `PWD_PEPPER`).
+
+## Sistema de pontos
+
+A variável `POINT_VALUE_PER_BRL` define quantos pontos equivalem a 1 BRL na hora de calcular recompensas. Toda movimentação de pontos é registrada em `PointsLog` para auditoria; transferências entre usuários geram um `PointsTransfer`.
+
+## Licença
+
+Veja [LICENSE](./LICENSE).
